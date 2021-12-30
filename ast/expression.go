@@ -30,3 +30,24 @@ type Identifier struct {
 }
 
 func (Identifier) express() {}
+
+type BlockExpression struct {
+	Expressions []Expression
+}
+
+func (BlockExpression) express() {}
+
+type WhileExpression struct {
+	Condition Expression
+	Body      Expression
+}
+
+func (WhileExpression) express() {}
+
+type IfExpression struct {
+	Condition  Expression
+	ThenClause Expression
+	ElseClause Expression
+}
+
+func (IfExpression) express() {}

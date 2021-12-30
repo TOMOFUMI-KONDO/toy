@@ -42,9 +42,28 @@ func (Ast) Identifier(name string) Identifier {
 	return Identifier{Name: name}
 }
 
-func (Ast) Assignment(name string, expression Expression) Assignment {
+func (Ast) Assignment(name string, exp Expression) Assignment {
 	return Assignment{
 		Name:       name,
-		Expression: expression,
+		Expression: exp,
+	}
+}
+
+func (Ast) BlockExpression(exps []Expression) BlockExpression {
+	return BlockExpression{Expressions: exps}
+}
+
+func (Ast) WhileExpression(cond Expression, body Expression) WhileExpression {
+	return WhileExpression{
+		Condition: cond,
+		Body:      body,
+	}
+}
+
+func (Ast) IfExpression(cond Expression, thenClause Expression, elseClause Expression) IfExpression {
+	return IfExpression{
+		Condition:  cond,
+		ThenClause: thenClause,
+		ElseClause: elseClause,
 	}
 }
