@@ -8,12 +8,12 @@ import (
 )
 
 var (
-	a           ast.Ast
+	_ast        ast.Ast
 	interpreter Interpreter
 )
 
 func TestMain(m *testing.M) {
-	a = ast.Ast{}
+	_ast = ast.Ast{}
 	interpreter = Interpreter{}
 
 	code := m.Run()
@@ -21,7 +21,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestInterpreterIntLiteral(t *testing.T) {
-	exp := a.Integer(1)
+	exp := _ast.Integer(1)
 
 	result, err := interpreter.Interpret(exp)
 	if err != nil {
@@ -33,7 +33,7 @@ func TestInterpreterIntLiteral(t *testing.T) {
 }
 
 func TestInterpretAdd(t *testing.T) {
-	exp := a.Add(a.Integer(1), a.Integer(2))
+	exp := _ast.Add(_ast.Integer(1), _ast.Integer(2))
 
 	result, err := interpreter.Interpret(exp)
 	if err != nil {
@@ -45,7 +45,7 @@ func TestInterpretAdd(t *testing.T) {
 }
 
 func TestInterpretSubtract(t *testing.T) {
-	exp := a.Subtract(a.Integer(10), a.Integer(3))
+	exp := _ast.Subtract(_ast.Integer(10), _ast.Integer(3))
 
 	result, err := interpreter.Interpret(exp)
 	if err != nil {
@@ -57,7 +57,7 @@ func TestInterpretSubtract(t *testing.T) {
 }
 
 func TestInterpretMultiply(t *testing.T) {
-	exp := a.Multiply(a.Integer(2), a.Integer(5))
+	exp := _ast.Multiply(_ast.Integer(2), _ast.Integer(5))
 
 	result, err := interpreter.Interpret(exp)
 	if err != nil {
@@ -69,7 +69,7 @@ func TestInterpretMultiply(t *testing.T) {
 }
 
 func TestInterpretDivide(t *testing.T) {
-	exp := a.Divide(a.Integer(10), a.Integer(2))
+	exp := _ast.Divide(_ast.Integer(10), _ast.Integer(2))
 
 	result, err := interpreter.Interpret(exp)
 	if err != nil {
