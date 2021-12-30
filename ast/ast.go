@@ -37,3 +37,14 @@ func (Ast) Divide(lhs, rhs Expression) BinaryExpression {
 func (Ast) Integer(value int) IntegerLiteral {
 	return IntegerLiteral{Value: value}
 }
+
+func (Ast) Identifier(name string) Identifier {
+	return Identifier{Name: name}
+}
+
+func (Ast) Assignment(name string, expression Expression) Assignment {
+	return Assignment{
+		Name:       name,
+		Expression: expression,
+	}
+}

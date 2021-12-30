@@ -17,3 +17,16 @@ type IntegerLiteral struct {
 }
 
 func (IntegerLiteral) express() {}
+
+type Assignment struct {
+	Name       string
+	Expression Expression
+}
+
+func (Assignment) express() {}
+
+type Identifier struct {
+	Name string
+}
+
+func (Identifier) express() {}

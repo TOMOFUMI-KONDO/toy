@@ -6,7 +6,9 @@ import (
 	"github.com/TOMOFUMI-KONDO/toy/ast"
 )
 
-type Interpreter struct{}
+type Interpreter struct {
+	environment map[string]int
+}
 
 func (i *Interpreter) Interpret(e ast.Expression) (int, error) {
 	binaryExp, ok := e.(ast.BinaryExpression)
@@ -39,5 +41,20 @@ func (i *Interpreter) Interpret(e ast.Expression) (int, error) {
 		return intLiteralExp.Value, nil
 	}
 
-	return 0, fmt.Errorf("invalid expression: %v", e)
+	identifier, ok := e.(ast.Identifier)
+	if ok {
+		return i.environment[identifier.Name], nil
+	}
+
+	assignment, ok := e.(ast.Assignment)
+	if ok {
+		v, err := i.Interpret(assignment.Expression)
+		if err != nil {
+			return 0, fmt.Errorf("failed to Interpert expression of assignment: %v", err)
+		}
+		i.environment[assignment.Name] = v
+		return v, nil
+	}
+
+	return 0, fmt.Errorf("unexpected expression: %v", e)
 }

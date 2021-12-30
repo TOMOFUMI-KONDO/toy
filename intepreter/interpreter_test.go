@@ -79,3 +79,46 @@ func TestInterpretDivide(t *testing.T) {
 		t.Errorf("result = %d; want 5", result)
 	}
 }
+
+func TestInterpreterIdentifier(t *testing.T) {
+	interpreter = Interpreter{
+		environment: map[string]int{
+			"key": 1,
+		},
+	}
+
+	exp := _ast.Identifier("key")
+	result, err := interpreter.Interpret(exp)
+	if err != nil {
+		t.Errorf("failed to Interpret: %v", err)
+	}
+	if result != 1 {
+		t.Errorf("result = %d; want 1", result)
+	}
+}
+
+func TestInterpretAssignment(t *testing.T) {
+	var exp ast.Expression
+
+	exp = ast.Assignment{
+		Name:       "key",
+		Expression: ast.IntegerLiteral{Value: 1},
+	}
+	result, err := interpreter.Interpret(exp)
+	if err != nil {
+		t.Errorf("failed to Interpret: %v", err)
+	}
+	if result != 1 {
+		t.Errorf("result = %d; want 1", result)
+	}
+
+	// check environment is set
+	exp = ast.Identifier{Name: "key"}
+	result, err = interpreter.Interpret(exp)
+	if err != nil {
+		t.Errorf("failed to Interpret: %v", err)
+	}
+	if result != 1 {
+		t.Errorf("result = %d; want 1", result)
+	}
+}
