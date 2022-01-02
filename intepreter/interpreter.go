@@ -94,10 +94,6 @@ func (i *Interpreter) Interpret(e ast.Expression) (int, error) {
 
 	ifExp, ok := e.(ast.IfExpression)
 	if ok {
-		//cond, err := i.Interpret(ifExp.Condition)
-		//if err != nil {
-		//	return 0, fmt.Errorf("failed to Interpret condition of IfExpression: %w", err)
-		//}
 		cond, err := i.evalCondition(ifExp.Condition)
 		if err != nil {
 			return 0, fmt.Errorf("failed to eval condition of IfExpression")
@@ -165,5 +161,6 @@ func (i *Interpreter) evalCondition(cond ast.Expression) (bool, error) {
 		return false, fmt.Errorf("failed to Interpret condition: %w", err)
 	}
 
+	// eval as false if and only if condInt is 0
 	return condInt != 0, nil
 }

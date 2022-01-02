@@ -189,9 +189,11 @@ func TestInterpreterWhile(t *testing.T) {
 func TestInterpreterBlock(t *testing.T) {
 	identifier := ast.Identifier{Name: "a"}
 
-	// a = 0
-	// a = a + 10
-	// a * 2
+	/*
+		a = 0
+		a = a + 10
+		a * 2
+	*/
 	exp := ast.BlockExpression{
 		Expressions: []ast.Expression{
 			ast.Assignment{
