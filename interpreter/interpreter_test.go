@@ -244,6 +244,7 @@ func TestInterpreterProgram(t *testing.T) {
 	if err != nil {
 		t.Errorf("failed to CallMain: %v", err)
 	}
+	// 5! = 120
 	if result != 120 {
 		t.Errorf("result = %d; want 120", result)
 	}
