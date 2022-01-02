@@ -13,8 +13,8 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	_ast = ast.Ast{}
-	interpreter = Interpreter{}
+	_ast = ast.NewAst()
+	interpreter = NewInterpreter()
 
 	code := m.Run()
 	os.Exit(code)
@@ -82,9 +82,8 @@ func TestInterpretDivide(t *testing.T) {
 
 func TestInterpreterIdentifier(t *testing.T) {
 	interpreter = Interpreter{
-		environment: map[string]int{
-			"key": 1,
-		},
+		varEnv:  &ast.Environment{Bindings: map[string]int{"key": 1}},
+		funcEnv: map[string]ast.FunctionDefinition{},
 	}
 
 	exp := _ast.Identifier("key")
@@ -98,12 +97,7 @@ func TestInterpreterIdentifier(t *testing.T) {
 }
 
 func TestInterpretAssignment(t *testing.T) {
-	var exp ast.Expression
-
-	exp = ast.Assignment{
-		Name:       "key",
-		Expression: ast.IntegerLiteral{Value: 1},
-	}
+	exp := _ast.Assignment("key", _ast.Integer(1))
 	result, err := interpreter.Interpret(exp)
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -111,19 +105,19 @@ func TestInterpretAssignment(t *testing.T) {
 	if result != 1 {
 		t.Errorf("result = %d; want 1", result)
 	}
-	// environment should be set
-	cond := interpreter.environment["key"]
+	// varEnv should be set
+	cond := interpreter.varEnv.Bindings["key"]
 	if cond != 1 {
-		t.Errorf("environment.key = %d; want 1", cond)
+		t.Errorf("varEnv.key = %d; want 1", cond)
 	}
 }
 
 func TestInterpreterIf(t *testing.T) {
-	exp := ast.IfExpression{
-		Condition:  ast.IntegerLiteral{Value: 1}, // true
-		ThenClause: ast.IntegerLiteral{Value: 2},
-		ElseClause: ast.IntegerLiteral{Value: 3},
-	}
+	exp := _ast.If(
+		_ast.Equal(_ast.Integer(1), _ast.Integer(1)), // true
+		_ast.Integer(2),
+		_ast.Integer(3),
+	)
 	result, err := interpreter.Interpret(exp)
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -132,7 +126,7 @@ func TestInterpreterIf(t *testing.T) {
 		t.Errorf("result = %d; want 2", result)
 	}
 
-	exp.Condition = ast.IntegerLiteral{Value: 0} //false
+	exp.Condition = _ast.NotEqual(_ast.Integer(1), _ast.Integer(1)) //false
 	result, err = interpreter.Interpret(exp)
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -154,24 +148,24 @@ func TestInterpreterIf(t *testing.T) {
 
 func TestInterpreterWhile(t *testing.T) {
 	interpreter = Interpreter{
-		environment: map[string]int{
-			"condition": 10,
-		},
+		varEnv:  &ast.Environment{Bindings: map[string]int{"condition": 10}},
+		funcEnv: map[string]ast.FunctionDefinition{},
 	}
 
-	identifier := ast.Identifier{Name: "condition"}
-	exp := ast.WhileExpression{
-		Condition: identifier,
-		// decrement environment.condition
-		Body: ast.Assignment{
-			Name: "condition",
-			Expression: ast.BinaryExpression{
-				Operator: ast.SUBTRACT,
-				Lhs:      identifier,
-				Rhs:      ast.IntegerLiteral{Value: 1},
-			},
-		},
-	} // loop while environment['"key"] != 0
+	identifier := _ast.Identifier("condition")
+
+	/*
+		while condition != 0 {
+			condition = condition - 1
+		}
+	*/
+	exp := _ast.While(
+		identifier,
+		_ast.Assignment(
+			"condition",
+			_ast.Subtract(identifier, _ast.Integer(1)),
+		),
+	)
 
 	result, err := interpreter.Interpret(exp)
 	if err != nil {
@@ -180,41 +174,27 @@ func TestInterpreterWhile(t *testing.T) {
 	if result != 1 {
 		t.Errorf("result = %d; want 1", result)
 	}
-	cond := interpreter.environment["condition"]
+	cond := interpreter.varEnv.Bindings["condition"]
 	if cond != 0 {
-		t.Errorf("environment.condition = %d; want 0", cond)
+		t.Errorf("varEnv.condition = %d; want 0", cond)
 	}
 }
 
 func TestInterpreterBlock(t *testing.T) {
-	identifier := ast.Identifier{Name: "a"}
+	identifier := _ast.Identifier("a")
 
 	/*
 		a = 0
 		a = a + 10
 		a * 2
 	*/
-	exp := ast.BlockExpression{
-		Expressions: []ast.Expression{
-			ast.Assignment{
-				Name:       "a",
-				Expression: ast.IntegerLiteral{Value: 0},
-			},
-			ast.Assignment{
-				Name: "a",
-				Expression: ast.BinaryExpression{
-					Operator: ast.ADD,
-					Lhs:      identifier,
-					Rhs:      ast.IntegerLiteral{Value: 10},
-				},
-			},
-			ast.BinaryExpression{
-				Operator: ast.MULTIPLY,
-				Lhs:      identifier,
-				Rhs:      ast.IntegerLiteral{Value: 2},
-			},
+	exp := _ast.Block(
+		[]ast.Expression{
+			_ast.Assignment("a", _ast.Integer(0)),
+			_ast.Assignment("a", _ast.Add(identifier, _ast.Integer(10))),
+			_ast.Multiply(identifier, _ast.Integer(2)),
 		},
-	}
+	)
 
 	result, err := interpreter.Interpret(exp)
 	if err != nil {
@@ -223,8 +203,48 @@ func TestInterpreterBlock(t *testing.T) {
 	if result != 20 {
 		t.Errorf("result = %d; want 20", result)
 	}
-	a := interpreter.environment["a"]
+	a := interpreter.varEnv.Bindings["a"]
 	if a != 10 {
 		t.Errorf("environemnt.a = %d; want 10", a)
+	}
+}
+
+func TestInterpreterProgram(t *testing.T) {
+	n := _ast.Identifier("n")
+	topLevels := []ast.TopLevel{
+		/*
+			define main() {
+				fact(5);
+			}
+		*/
+		_ast.DefineFunction("main", []string{}, _ast.Block(
+			[]ast.Expression{
+				_ast.Call("fact", []ast.Expression{_ast.Integer(5)}),
+			},
+		)),
+		/*
+			define fact(n) {
+				if(n < 2)  {
+					1;
+				} else {
+					n  * fact(n - 1);
+				}
+			}
+		*/
+		_ast.DefineFunction("fact", []string{"n"}, _ast.If(
+			_ast.LessThan(n, _ast.Integer(2)),
+			_ast.Integer(1),
+			_ast.Multiply(n, _ast.Call("fact", []ast.Expression{
+				_ast.Subtract(n, _ast.Integer(1)),
+			})),
+		)),
+	}
+
+	result, err := interpreter.CallMain(_ast.Program(topLevels))
+	if err != nil {
+		t.Errorf("failed to CallMain: %v", err)
+	}
+	if result != 120 {
+		t.Errorf("result = %d; want 120", result)
 	}
 }

@@ -1,8 +1,14 @@
 package ast
 
 type Expression interface {
-	express()
+	expression()
 }
+
+type IntegerLiteral struct {
+	Value int
+}
+
+func (IntegerLiteral) expression() {}
 
 type BinaryExpression struct {
 	Operator Operator
@@ -10,39 +16,33 @@ type BinaryExpression struct {
 	Rhs      Expression
 }
 
-func (BinaryExpression) express() {}
-
-type IntegerLiteral struct {
-	Value int
-}
-
-func (IntegerLiteral) express() {}
+func (BinaryExpression) expression() {}
 
 type Assignment struct {
 	Name       string
 	Expression Expression
 }
 
-func (Assignment) express() {}
+func (Assignment) expression() {}
 
 type Identifier struct {
 	Name string
 }
 
-func (Identifier) express() {}
+func (Identifier) expression() {}
 
 type BlockExpression struct {
 	Expressions []Expression
 }
 
-func (BlockExpression) express() {}
+func (BlockExpression) expression() {}
 
 type WhileExpression struct {
 	Condition Expression
 	Body      Expression
 }
 
-func (WhileExpression) express() {}
+func (WhileExpression) expression() {}
 
 type IfExpression struct {
 	Condition  Expression
@@ -50,4 +50,11 @@ type IfExpression struct {
 	ElseClause Expression
 }
 
-func (IfExpression) express() {}
+func (IfExpression) expression() {}
+
+type FunctionCall struct {
+	Name string
+	Args []Expression
+}
+
+func (FunctionCall) expression() {}

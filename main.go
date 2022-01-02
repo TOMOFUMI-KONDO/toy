@@ -4,11 +4,11 @@ import (
 	"fmt"
 
 	"github.com/TOMOFUMI-KONDO/toy/ast"
-	interpreter "github.com/TOMOFUMI-KONDO/toy/intepreter"
+	"github.com/TOMOFUMI-KONDO/toy/interpreter"
 )
 
 func main() {
-	a := ast.Ast{}
+	a := ast.NewAst()
 	// ( 1 - 2 * 3 ) + 4
 	exp := a.Add(
 		a.Subtract(
@@ -21,7 +21,7 @@ func main() {
 		a.Integer(4),
 	)
 
-	i := interpreter.Interpreter{}
+	i := interpreter.NewInterpreter()
 	result, err := i.Interpret(exp)
 	if err != nil {
 		panic(err)
