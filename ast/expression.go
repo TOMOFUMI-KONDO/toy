@@ -52,6 +52,12 @@ type IfExpression struct {
 
 func (IfExpression) expression() {}
 
+type Println struct {
+	Arg Expression
+}
+
+func (Println) expression() {}
+
 type FunctionCall struct {
 	Name string
 	Args []Expression

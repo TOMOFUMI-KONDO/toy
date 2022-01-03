@@ -419,6 +419,16 @@ func TestInterpreterBlock(t *testing.T) {
 	}
 }
 
+func TestInterpreterPrintln(t *testing.T) {
+	result, err := interpreter.Interpret(_ast.Println(_ast.Integer(2)))
+	if err != nil {
+		t.Errorf("failed to Interpret Println: %v", err)
+	}
+	if result != 2 {
+		t.Errorf("result = %d; want 2", result)
+	}
+}
+
 func TestInterpreterDefineAndCallFunction(t *testing.T) {
 	n := _ast.Identifier("n")
 	topLevels := []ast.TopLevel{

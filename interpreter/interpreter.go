@@ -172,6 +172,15 @@ func (i *Interpreter) Interpret(e ast.Expression) (int, error) {
 		return result, nil
 	}
 
+	printlnExp, ok := e.(ast.Println)
+	if ok {
+		result, err := i.Interpret(printlnExp.Arg)
+		if err != nil {
+			return 0, fmt.Errorf("failed to Interpret Println: %v", err)
+		}
+		return result, nil
+	}
+
 	funcCall, ok := e.(ast.FunctionCall)
 	if ok {
 		funcDef, ok := i.funcEnv[funcCall.Name]

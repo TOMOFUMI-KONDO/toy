@@ -120,6 +120,12 @@ func (Ast) If(cond Expression, thenClause Expression, elseClause Expression) IfE
 	}
 }
 
+func (Ast) Println(arg Expression) Println {
+	return Println{
+		Arg: arg,
+	}
+}
+
 func (Ast) Call(name string, args []Expression) FunctionCall {
 	return FunctionCall{
 		Name: name,
