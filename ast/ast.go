@@ -135,6 +135,13 @@ func (Ast) DefineFunction(name string, args []string, body Expression) FunctionD
 	}
 }
 
+func (Ast) GlobalAssignment(name string, exp Expression) GlobalVariableDefinition {
+	return GlobalVariableDefinition{
+		Name:       name,
+		Expression: exp,
+	}
+}
+
 func (Ast) Program(topLevels []TopLevel) Program {
 	return Program{Definitions: topLevels}
 }

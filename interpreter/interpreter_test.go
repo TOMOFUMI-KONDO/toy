@@ -20,7 +20,7 @@ func TestMain(m *testing.M) {
 	os.Exit(code)
 }
 
-func TestInterpreterIntLiteral(t *testing.T) {
+func TestInterpreterInteger(t *testing.T) {
 	exp := _ast.Integer(1)
 
 	result, err := interpreter.Interpret(exp)
@@ -77,6 +77,216 @@ func TestInterpretDivide(t *testing.T) {
 	}
 	if result != 5 {
 		t.Errorf("result = %d; want 5", result)
+	}
+}
+
+func TestInterpreterLessThan(t *testing.T) {
+	result, err := interpreter.Interpret(_ast.LessThan(
+		_ast.Integer(1),
+		_ast.Integer(2),
+	))
+	if err != nil {
+		t.Errorf("failed to Interpret: %v", err)
+	}
+	if result != 1 {
+		t.Errorf("result = %d; want 1", result)
+	}
+
+	result, err = interpreter.Interpret(_ast.LessThan(
+		_ast.Integer(2),
+		_ast.Integer(2),
+	))
+	if err != nil {
+		t.Errorf("failed to Interpret: %v", err)
+	}
+	if result != 0 {
+		t.Errorf("result = %d; want 0", result)
+	}
+
+	result, err = interpreter.Interpret(_ast.LessThan(
+		_ast.Integer(3),
+		_ast.Integer(2),
+	))
+	if err != nil {
+		t.Errorf("failed to Interpret: %v", err)
+	}
+	if result != 0 {
+		t.Errorf("result = %d; want 0", result)
+	}
+}
+
+func TestInterpreterLessOrEqual(t *testing.T) {
+	result, err := interpreter.Interpret(_ast.LessOrEqual(
+		_ast.Integer(1),
+		_ast.Integer(2),
+	))
+	if err != nil {
+		t.Errorf("failed to Interpret: %v", err)
+	}
+	if result != 1 {
+		t.Errorf("result = %d; want 1", result)
+	}
+
+	result, err = interpreter.Interpret(_ast.LessOrEqual(
+		_ast.Integer(2),
+		_ast.Integer(2),
+	))
+	if err != nil {
+		t.Errorf("failed to Interpret: %v", err)
+	}
+	if result != 1 {
+		t.Errorf("result = %d; want 1", result)
+	}
+
+	result, err = interpreter.Interpret(_ast.LessOrEqual(
+		_ast.Integer(3),
+		_ast.Integer(2),
+	))
+	if err != nil {
+		t.Errorf("failed to Interpret: %v", err)
+	}
+	if result != 0 {
+		t.Errorf("result = %d; want 0", result)
+	}
+}
+
+func TestInterpreterGreaterThan(t *testing.T) {
+	result, err := interpreter.Interpret(_ast.GreaterThan(
+		_ast.Integer(1),
+		_ast.Integer(2),
+	))
+	if err != nil {
+		t.Errorf("failed to Interpret: %v", err)
+	}
+	if result != 0 {
+		t.Errorf("result = %d; want 0", result)
+	}
+
+	result, err = interpreter.Interpret(_ast.GreaterThan(
+		_ast.Integer(2),
+		_ast.Integer(2),
+	))
+	if err != nil {
+		t.Errorf("failed to Interpret: %v", err)
+	}
+	if result != 0 {
+		t.Errorf("result = %d; want 0", result)
+	}
+
+	result, err = interpreter.Interpret(_ast.GreaterThan(
+		_ast.Integer(3),
+		_ast.Integer(2),
+	))
+	if err != nil {
+		t.Errorf("failed to Interpret: %v", err)
+	}
+	if result != 1 {
+		t.Errorf("result = %d; want 1", result)
+	}
+}
+
+func TestInterpreterEqual(t *testing.T) {
+	result, err := interpreter.Interpret(_ast.Equal(
+		_ast.Integer(1),
+		_ast.Integer(2),
+	))
+	if err != nil {
+		t.Errorf("failed to Interpret: %v", err)
+	}
+	if result != 0 {
+		t.Errorf("result = %d; want 0", result)
+	}
+
+	result, err = interpreter.Interpret(_ast.Equal(
+		_ast.Integer(2),
+		_ast.Integer(2),
+	))
+	if err != nil {
+		t.Errorf("failed to Interpret: %v", err)
+	}
+	if result != 1 {
+		t.Errorf("result = %d; want 1", result)
+	}
+
+	result, err = interpreter.Interpret(_ast.Equal(
+		_ast.Integer(3),
+		_ast.Integer(2),
+	))
+	if err != nil {
+		t.Errorf("failed to Interpret: %v", err)
+	}
+	if result != 0 {
+		t.Errorf("result = %d; want 0", result)
+	}
+}
+
+func TestInterpreterNotEqual(t *testing.T) {
+	result, err := interpreter.Interpret(_ast.NotEqual(
+		_ast.Integer(1),
+		_ast.Integer(2),
+	))
+	if err != nil {
+		t.Errorf("failed to Interpret: %v", err)
+	}
+	if result != 1 {
+		t.Errorf("result = %d; want 1", result)
+	}
+
+	result, err = interpreter.Interpret(_ast.NotEqual(
+		_ast.Integer(2),
+		_ast.Integer(2),
+	))
+	if err != nil {
+		t.Errorf("failed to Interpret: %v", err)
+	}
+	if result != 0 {
+		t.Errorf("result = %d; want 0", result)
+	}
+
+	result, err = interpreter.Interpret(_ast.NotEqual(
+		_ast.Integer(3),
+		_ast.Integer(2),
+	))
+	if err != nil {
+		t.Errorf("failed to Interpret: %v", err)
+	}
+	if result != 1 {
+		t.Errorf("result = %d; want 1", result)
+	}
+}
+
+func TestInterpreterGreaterOrEqual(t *testing.T) {
+	result, err := interpreter.Interpret(_ast.GreaterOrEqual(
+		_ast.Integer(1),
+		_ast.Integer(2),
+	))
+	if err != nil {
+		t.Errorf("failed to Interpret: %v", err)
+	}
+	if result != 0 {
+		t.Errorf("result = %d; want 0", result)
+	}
+
+	result, err = interpreter.Interpret(_ast.GreaterOrEqual(
+		_ast.Integer(2),
+		_ast.Integer(2),
+	))
+	if err != nil {
+		t.Errorf("failed to Interpret: %v", err)
+	}
+	if result != 1 {
+		t.Errorf("result = %d; want 1", result)
+	}
+
+	result, err = interpreter.Interpret(_ast.GreaterOrEqual(
+		_ast.Integer(3),
+		_ast.Integer(2),
+	))
+	if err != nil {
+		t.Errorf("failed to Interpret: %v", err)
+	}
+	if result != 1 {
+		t.Errorf("result = %d; want 1", result)
 	}
 }
 
@@ -209,16 +419,18 @@ func TestInterpreterBlock(t *testing.T) {
 	}
 }
 
-func TestInterpreterProgram(t *testing.T) {
+func TestInterpreterDefineAndCallFunction(t *testing.T) {
 	n := _ast.Identifier("n")
 	topLevels := []ast.TopLevel{
 		/*
 			define main() {
+				n = 0
 				fact(5);
 			}
 		*/
-		_ast.DefineFunction("main", []string{}, _ast.Block(
+		_ast.DefineFunction("main", nil, _ast.Block(
 			[]ast.Expression{
+				_ast.Assignment("n", _ast.Integer(0)), // This will be overwritten by argument in fact().
 				_ast.Call("fact", []ast.Expression{_ast.Integer(5)}),
 			},
 		)),
@@ -247,5 +459,32 @@ func TestInterpreterProgram(t *testing.T) {
 	// 5! = 120
 	if result != 120 {
 		t.Errorf("result = %d; want 120", result)
+	}
+}
+
+func TestInterpreterGlobalVarDef(t *testing.T) {
+	topLevels := []ast.TopLevel{
+		/*
+			n = 1
+			m = 2
+
+			define main() {
+				n + m
+			}
+		*/
+		_ast.GlobalAssignment("n", _ast.Integer(1)),
+		_ast.GlobalAssignment("m", _ast.Integer(3)), // This will be overwritten in main().
+		_ast.DefineFunction("main", nil, _ast.Block([]ast.Expression{
+			_ast.Assignment("m", _ast.Integer(2)),
+			_ast.Add(_ast.Identifier("n"), _ast.Identifier("m")),
+		})),
+	}
+
+	result, err := interpreter.CallMain(_ast.Program(topLevels))
+	if err != nil {
+		t.Errorf("failed to CallMain: %v", err)
+	}
+	if result != 3 {
+		t.Errorf("result = %d; want 3", result)
 	}
 }
