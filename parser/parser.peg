@@ -6,6 +6,7 @@ type Toy Peg {
 program <- topLevel* !.
 
 topLevel <- functionDefinition / globalVariableDefinition
+
 functionDefinition <- 'define' space identifier '(' ( identifier ( ',' identifier )* )? ')' space blockExpression
 globalVariableDefinition <- 'global' space identifier '=' expression space
 
@@ -15,7 +16,7 @@ ifExpression <- 'if' space comparative space blockExpression ( 'else' space bloc
 whileExpression <- 'while' space comparative space blockExpression
 blockExpression <- '{' space? expression* space? '}' space?
 
-assignment <- identifier '=' expression
+assignment <- identifier '=' expression space
 
 comparative <- additive ( ( '<' / '>' / '<=' / '>=' / '==' / '!=' ) additive )*
 additive <- multitive ( ( '+' / '-' ) multitive )*
@@ -25,7 +26,7 @@ primary <- ( '(' comparative ')' ) / println / functionCall / identifier / integ
 
 println <- 'println' '(' expression ')'
 functionCall <- identifier '(' ( expression ( ',' expression )* )? ')'
+
 identifier <- [a-zA-Z]+
 integer <- [1-9] [0-9]*
-
 space <- [ \t\r\n]+
