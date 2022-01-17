@@ -1,9 +1,5 @@
-.SUFFIXES: .peg .go
-
-.peg.go:
-	peg -noast -output $@ $<
-
-all: parser.go
+build: parser.peg
+	peg parser.peg
 
 clean:
 	rm -f parser.go
