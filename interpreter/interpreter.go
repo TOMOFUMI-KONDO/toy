@@ -178,6 +178,7 @@ func (i *Interpreter) Interpret(e ast.Expression) (int, error) {
 		if err != nil {
 			return 0, fmt.Errorf("failed to Interpret Println: %v", err)
 		}
+		fmt.Println(result)
 		return result, nil
 	}
 
