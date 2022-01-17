@@ -1,0 +1,31 @@
+package parser
+
+type Toy Peg {
+}
+
+program <- topLevel* !.
+
+topLevel <- functionDefinition / globalVariableDefinition
+functionDefinition <- 'define' space identifier '(' ( identifier ( ',' identifier )* )? ')' space blockExpression
+globalVariableDefinition <- 'global' space identifier '=' expression space
+
+expression <-  ifExpression / whileExpression / blockExpression / assignment / comparative
+
+ifExpression <- 'if' space comparative space blockExpression ( 'else' space blockExpression )?
+whileExpression <- 'while' space comparative space blockExpression
+blockExpression <- '{' space? expression* space? '}' space?
+
+assignment <- identifier '=' expression
+
+comparative <- additive ( ( '<' / '>' / '<=' / '>=' / '==' / '!=' ) additive )*
+additive <- multitive ( ( '+' / '-' ) multitive )*
+multitive <- primary ( ('*' / '/') primary )*
+
+primary <- ( '(' comparative ')' ) / println / functionCall / identifier / integer
+
+println <- 'println' '(' expression ')'
+functionCall <- identifier '(' ( expression ( ',' expression )* )? ')'
+identifier <- [a-zA-Z]+
+integer <- [1-9] [0-9]*
+
+space <- [ \t\r\n]+
