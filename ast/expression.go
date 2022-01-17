@@ -39,15 +39,15 @@ func (BlockExpression) expression() {}
 
 type WhileExpression struct {
 	Condition Expression
-	Body      Expression
+	Body      BlockExpression
 }
 
 func (WhileExpression) expression() {}
 
 type IfExpression struct {
 	Condition  Expression
-	ThenClause Expression
-	ElseClause Expression
+	ThenClause BlockExpression
+	ElseClause BlockExpression
 }
 
 func (IfExpression) expression() {}

@@ -122,7 +122,7 @@ func (i *Interpreter) Interpret(e ast.Expression) (int, error) {
 		var result int
 		if cond /* NOTE: evaluate true if cond is not 0 */ {
 			result, err = i.Interpret(ifExp.ThenClause)
-		} else if ifExp.ElseClause != nil {
+		} else if ifExp.ElseClause.Expressions != nil {
 			result, err = i.Interpret(ifExp.ElseClause)
 		} else {
 			// NOTE: evaluate 1 if cond is false and elseClause is nil

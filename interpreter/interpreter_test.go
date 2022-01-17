@@ -325,8 +325,8 @@ func TestInterpretAssignment(t *testing.T) {
 func TestInterpreterIf(t *testing.T) {
 	exp := _ast.If(
 		_ast.Equal(_ast.Integer(1), _ast.Integer(1)), // true
-		_ast.Integer(2),
-		_ast.Integer(3),
+		_ast.Block([]ast.Expression{_ast.Integer(2)}),
+		_ast.Block([]ast.Expression{_ast.Integer(3)}),
 	)
 	result, err := interpreter.Interpret(exp)
 	if err != nil {
@@ -345,7 +345,7 @@ func TestInterpreterIf(t *testing.T) {
 		t.Errorf("result = %d; want 3", result)
 	}
 
-	exp.ElseClause = nil
+	exp.ElseClause.Expressions = nil
 	result, err = interpreter.Interpret(exp)
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -371,10 +371,12 @@ func TestInterpreterWhile(t *testing.T) {
 	*/
 	exp := _ast.While(
 		identifier,
-		_ast.Assignment(
-			"condition",
-			_ast.Subtract(identifier, _ast.Integer(1)),
-		),
+		_ast.Block([]ast.Expression{
+			_ast.Assignment(
+				"condition",
+				_ast.Subtract(identifier, _ast.Integer(1)),
+			),
+		}),
 	)
 
 	result, err := interpreter.Interpret(exp)
@@ -453,13 +455,17 @@ func TestInterpreterDefineAndCallFunction(t *testing.T) {
 				}
 			}
 		*/
-		_ast.DefineFunction("fact", []string{"n"}, _ast.If(
-			_ast.LessThan(n, _ast.Integer(2)),
-			_ast.Integer(1),
-			_ast.Multiply(n, _ast.Call("fact", []ast.Expression{
-				_ast.Subtract(n, _ast.Integer(1)),
-			})),
-		)),
+		_ast.DefineFunction("fact", []string{"n"}, _ast.Block([]ast.Expression{
+			_ast.If(
+				_ast.LessThan(n, _ast.Integer(2)),
+				_ast.Block([]ast.Expression{_ast.Integer(1)}),
+				_ast.Block([]ast.Expression{
+					_ast.Multiply(n, _ast.Call("fact", []ast.Expression{
+						_ast.Subtract(n, _ast.Integer(1)),
+					})),
+				}),
+			),
+		})),
 	}
 
 	result, err := interpreter.CallMain(_ast.Program(topLevels))

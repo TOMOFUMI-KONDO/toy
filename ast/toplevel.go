@@ -7,14 +7,14 @@ type TopLevel interface {
 type FunctionDefinition struct {
 	Name string
 	Args []string
-	Body Expression
+	Body BlockExpression
 }
 
 func (FunctionDefinition) topLevel() {}
 
 type GlobalVariableDefinition struct {
-	Name       string
-	Expression Expression
+	Name string
+	Expression
 }
 
 func (GlobalVariableDefinition) topLevel() {}

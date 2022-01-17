@@ -105,14 +105,14 @@ func (Ast) Block(exps []Expression) BlockExpression {
 	return BlockExpression{Expressions: exps}
 }
 
-func (Ast) While(cond Expression, body Expression) WhileExpression {
+func (Ast) While(cond Expression, body BlockExpression) WhileExpression {
 	return WhileExpression{
 		Condition: cond,
 		Body:      body,
 	}
 }
 
-func (Ast) If(cond Expression, thenClause Expression, elseClause Expression) IfExpression {
+func (Ast) If(cond Expression, thenClause BlockExpression, elseClause BlockExpression) IfExpression {
 	return IfExpression{
 		Condition:  cond,
 		ThenClause: thenClause,
@@ -133,7 +133,7 @@ func (Ast) Call(name string, args []Expression) FunctionCall {
 	}
 }
 
-func (Ast) DefineFunction(name string, args []string, body Expression) FunctionDefinition {
+func (Ast) DefineFunction(name string, args []string, body BlockExpression) FunctionDefinition {
 	return FunctionDefinition{
 		Name: name,
 		Args: args,
