@@ -1,16 +1,10 @@
 package ast
 
-type Ast struct{}
-
-func NewAst() Ast {
-	return Ast{}
-}
-
-func (Ast) Integer(value int) IntegerLiteral {
+func NewInteger(value int) IntegerLiteral {
 	return IntegerLiteral{Value: value}
 }
 
-func (Ast) Add(lhs, rhs Expression) BinaryExpression {
+func NewAdd(lhs, rhs Expression) BinaryExpression {
 	return BinaryExpression{
 		Operator: ADD,
 		Lhs:      lhs,
@@ -18,7 +12,7 @@ func (Ast) Add(lhs, rhs Expression) BinaryExpression {
 	}
 }
 
-func (Ast) Subtract(lhs, rhs Expression) BinaryExpression {
+func NewSubtract(lhs, rhs Expression) BinaryExpression {
 	return BinaryExpression{
 		Operator: SUBTRACT,
 		Lhs:      lhs,
@@ -26,7 +20,7 @@ func (Ast) Subtract(lhs, rhs Expression) BinaryExpression {
 	}
 }
 
-func (Ast) Multiply(lhs, rhs Expression) BinaryExpression {
+func NewMultiply(lhs, rhs Expression) BinaryExpression {
 	return BinaryExpression{
 		Operator: MULTIPLY,
 		Lhs:      lhs,
@@ -34,7 +28,7 @@ func (Ast) Multiply(lhs, rhs Expression) BinaryExpression {
 	}
 }
 
-func (Ast) Divide(lhs, rhs Expression) BinaryExpression {
+func NewDivide(lhs, rhs Expression) BinaryExpression {
 	return BinaryExpression{
 		Operator: DIVIDE,
 		Lhs:      lhs,
@@ -42,7 +36,7 @@ func (Ast) Divide(lhs, rhs Expression) BinaryExpression {
 	}
 }
 
-func (Ast) LessThan(lhs, rhs Expression) BinaryExpression {
+func NewLessThan(lhs, rhs Expression) BinaryExpression {
 	return BinaryExpression{
 		Operator: LESS_THAN,
 		Lhs:      lhs,
@@ -50,7 +44,7 @@ func (Ast) LessThan(lhs, rhs Expression) BinaryExpression {
 	}
 }
 
-func (Ast) LessOrEqual(lhs, rhs Expression) BinaryExpression {
+func NewLessOrEqual(lhs, rhs Expression) BinaryExpression {
 	return BinaryExpression{
 		Operator: LESS_OR_EQUAL,
 		Lhs:      lhs,
@@ -58,7 +52,7 @@ func (Ast) LessOrEqual(lhs, rhs Expression) BinaryExpression {
 	}
 }
 
-func (Ast) GreaterThan(lhs, rhs Expression) BinaryExpression {
+func NewGreaterThan(lhs, rhs Expression) BinaryExpression {
 	return BinaryExpression{
 		Operator: GREATER_THAN,
 		Lhs:      lhs,
@@ -66,7 +60,7 @@ func (Ast) GreaterThan(lhs, rhs Expression) BinaryExpression {
 	}
 }
 
-func (Ast) GreaterOrEqual(lhs, rhs Expression) BinaryExpression {
+func NewGreaterOrEqual(lhs, rhs Expression) BinaryExpression {
 	return BinaryExpression{
 		Operator: GREATER_OR_EQUAL,
 		Lhs:      lhs,
@@ -74,7 +68,7 @@ func (Ast) GreaterOrEqual(lhs, rhs Expression) BinaryExpression {
 	}
 }
 
-func (Ast) Equal(lhs, rhs Expression) BinaryExpression {
+func NewEqual(lhs, rhs Expression) BinaryExpression {
 	return BinaryExpression{
 		Operator: EQUAL,
 		Lhs:      lhs,
@@ -82,7 +76,7 @@ func (Ast) Equal(lhs, rhs Expression) BinaryExpression {
 	}
 }
 
-func (Ast) NotEqual(lhs, rhs Expression) BinaryExpression {
+func NewNotEqual(lhs, rhs Expression) BinaryExpression {
 	return BinaryExpression{
 		Operator: NOT_EQUAL,
 		Lhs:      lhs,
@@ -90,29 +84,29 @@ func (Ast) NotEqual(lhs, rhs Expression) BinaryExpression {
 	}
 }
 
-func (Ast) Identifier(name string) Identifier {
+func NewIdentifier(name string) Identifier {
 	return Identifier{Name: name}
 }
 
-func (Ast) Assignment(name string, exp Expression) Assignment {
+func NewAssignment(name string, exp Expression) Assignment {
 	return Assignment{
 		Name:       name,
 		Expression: exp,
 	}
 }
 
-func (Ast) Block(exps []Expression) BlockExpression {
+func NewBlock(exps []Expression) BlockExpression {
 	return BlockExpression{Expressions: exps}
 }
 
-func (Ast) While(cond Expression, body BlockExpression) WhileExpression {
+func NewWhile(cond Expression, body BlockExpression) WhileExpression {
 	return WhileExpression{
 		Condition: cond,
 		Body:      body,
 	}
 }
 
-func (Ast) If(cond Expression, thenClause BlockExpression, elseClause BlockExpression) IfExpression {
+func NewIf(cond Expression, thenClause BlockExpression, elseClause BlockExpression) IfExpression {
 	return IfExpression{
 		Condition:  cond,
 		ThenClause: thenClause,
@@ -120,20 +114,20 @@ func (Ast) If(cond Expression, thenClause BlockExpression, elseClause BlockExpre
 	}
 }
 
-func (Ast) Println(arg Expression) Println {
+func NewPrintln(arg Expression) Println {
 	return Println{
 		Arg: arg,
 	}
 }
 
-func (Ast) Call(name string, args []Expression) FunctionCall {
+func NewFuncCall(name string, args []Expression) FunctionCall {
 	return FunctionCall{
 		Name: name,
 		Args: args,
 	}
 }
 
-func (Ast) DefineFunction(name string, args []string, body BlockExpression) FunctionDefinition {
+func NewFuncDef(name string, args []string, body BlockExpression) FunctionDefinition {
 	return FunctionDefinition{
 		Name: name,
 		Args: args,
@@ -141,13 +135,13 @@ func (Ast) DefineFunction(name string, args []string, body BlockExpression) Func
 	}
 }
 
-func (Ast) GlobalAssignment(name string, exp Expression) GlobalVariableDefinition {
+func NewGlobalVarDef(name string, exp Expression) GlobalVariableDefinition {
 	return GlobalVariableDefinition{
 		Name:       name,
 		Expression: exp,
 	}
 }
 
-func (Ast) Program(topLevels []TopLevel) Program {
+func NewProgram(topLevels []TopLevel) Program {
 	return Program{Definitions: topLevels}
 }

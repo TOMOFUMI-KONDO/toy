@@ -8,12 +8,10 @@ import (
 )
 
 var (
-	_ast        ast.Ast
 	interpreter Interpreter
 )
 
 func TestMain(m *testing.M) {
-	_ast = ast.NewAst()
 	interpreter = NewInterpreter()
 
 	code := m.Run()
@@ -21,7 +19,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestInterpreterInteger(t *testing.T) {
-	exp := _ast.Integer(1)
+	exp := ast.NewInteger(1)
 
 	result, err := interpreter.Interpret(exp)
 	if err != nil {
@@ -33,7 +31,7 @@ func TestInterpreterInteger(t *testing.T) {
 }
 
 func TestInterpretAdd(t *testing.T) {
-	exp := _ast.Add(_ast.Integer(1), _ast.Integer(2))
+	exp := ast.NewAdd(ast.NewInteger(1), ast.NewInteger(2))
 
 	result, err := interpreter.Interpret(exp)
 	if err != nil {
@@ -45,7 +43,7 @@ func TestInterpretAdd(t *testing.T) {
 }
 
 func TestInterpretSubtract(t *testing.T) {
-	exp := _ast.Subtract(_ast.Integer(10), _ast.Integer(3))
+	exp := ast.NewSubtract(ast.NewInteger(10), ast.NewInteger(3))
 
 	result, err := interpreter.Interpret(exp)
 	if err != nil {
@@ -57,7 +55,7 @@ func TestInterpretSubtract(t *testing.T) {
 }
 
 func TestInterpretMultiply(t *testing.T) {
-	exp := _ast.Multiply(_ast.Integer(2), _ast.Integer(5))
+	exp := ast.NewMultiply(ast.NewInteger(2), ast.NewInteger(5))
 
 	result, err := interpreter.Interpret(exp)
 	if err != nil {
@@ -69,7 +67,7 @@ func TestInterpretMultiply(t *testing.T) {
 }
 
 func TestInterpretDivide(t *testing.T) {
-	exp := _ast.Divide(_ast.Integer(10), _ast.Integer(2))
+	exp := ast.NewDivide(ast.NewInteger(10), ast.NewInteger(2))
 
 	result, err := interpreter.Interpret(exp)
 	if err != nil {
@@ -81,9 +79,9 @@ func TestInterpretDivide(t *testing.T) {
 }
 
 func TestInterpreterLessThan(t *testing.T) {
-	result, err := interpreter.Interpret(_ast.LessThan(
-		_ast.Integer(1),
-		_ast.Integer(2),
+	result, err := interpreter.Interpret(ast.NewLessThan(
+		ast.NewInteger(1),
+		ast.NewInteger(2),
 	))
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -92,9 +90,9 @@ func TestInterpreterLessThan(t *testing.T) {
 		t.Errorf("result = %d; want 1", result)
 	}
 
-	result, err = interpreter.Interpret(_ast.LessThan(
-		_ast.Integer(2),
-		_ast.Integer(2),
+	result, err = interpreter.Interpret(ast.NewLessThan(
+		ast.NewInteger(2),
+		ast.NewInteger(2),
 	))
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -103,9 +101,9 @@ func TestInterpreterLessThan(t *testing.T) {
 		t.Errorf("result = %d; want 0", result)
 	}
 
-	result, err = interpreter.Interpret(_ast.LessThan(
-		_ast.Integer(3),
-		_ast.Integer(2),
+	result, err = interpreter.Interpret(ast.NewLessThan(
+		ast.NewInteger(3),
+		ast.NewInteger(2),
 	))
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -116,9 +114,9 @@ func TestInterpreterLessThan(t *testing.T) {
 }
 
 func TestInterpreterLessOrEqual(t *testing.T) {
-	result, err := interpreter.Interpret(_ast.LessOrEqual(
-		_ast.Integer(1),
-		_ast.Integer(2),
+	result, err := interpreter.Interpret(ast.NewLessOrEqual(
+		ast.NewInteger(1),
+		ast.NewInteger(2),
 	))
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -127,9 +125,9 @@ func TestInterpreterLessOrEqual(t *testing.T) {
 		t.Errorf("result = %d; want 1", result)
 	}
 
-	result, err = interpreter.Interpret(_ast.LessOrEqual(
-		_ast.Integer(2),
-		_ast.Integer(2),
+	result, err = interpreter.Interpret(ast.NewLessOrEqual(
+		ast.NewInteger(2),
+		ast.NewInteger(2),
 	))
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -138,9 +136,9 @@ func TestInterpreterLessOrEqual(t *testing.T) {
 		t.Errorf("result = %d; want 1", result)
 	}
 
-	result, err = interpreter.Interpret(_ast.LessOrEqual(
-		_ast.Integer(3),
-		_ast.Integer(2),
+	result, err = interpreter.Interpret(ast.NewLessOrEqual(
+		ast.NewInteger(3),
+		ast.NewInteger(2),
 	))
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -151,9 +149,9 @@ func TestInterpreterLessOrEqual(t *testing.T) {
 }
 
 func TestInterpreterGreaterThan(t *testing.T) {
-	result, err := interpreter.Interpret(_ast.GreaterThan(
-		_ast.Integer(1),
-		_ast.Integer(2),
+	result, err := interpreter.Interpret(ast.NewGreaterThan(
+		ast.NewInteger(1),
+		ast.NewInteger(2),
 	))
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -162,9 +160,9 @@ func TestInterpreterGreaterThan(t *testing.T) {
 		t.Errorf("result = %d; want 0", result)
 	}
 
-	result, err = interpreter.Interpret(_ast.GreaterThan(
-		_ast.Integer(2),
-		_ast.Integer(2),
+	result, err = interpreter.Interpret(ast.NewGreaterThan(
+		ast.NewInteger(2),
+		ast.NewInteger(2),
 	))
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -173,9 +171,9 @@ func TestInterpreterGreaterThan(t *testing.T) {
 		t.Errorf("result = %d; want 0", result)
 	}
 
-	result, err = interpreter.Interpret(_ast.GreaterThan(
-		_ast.Integer(3),
-		_ast.Integer(2),
+	result, err = interpreter.Interpret(ast.NewGreaterThan(
+		ast.NewInteger(3),
+		ast.NewInteger(2),
 	))
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -186,9 +184,9 @@ func TestInterpreterGreaterThan(t *testing.T) {
 }
 
 func TestInterpreterEqual(t *testing.T) {
-	result, err := interpreter.Interpret(_ast.Equal(
-		_ast.Integer(1),
-		_ast.Integer(2),
+	result, err := interpreter.Interpret(ast.NewEqual(
+		ast.NewInteger(1),
+		ast.NewInteger(2),
 	))
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -197,9 +195,9 @@ func TestInterpreterEqual(t *testing.T) {
 		t.Errorf("result = %d; want 0", result)
 	}
 
-	result, err = interpreter.Interpret(_ast.Equal(
-		_ast.Integer(2),
-		_ast.Integer(2),
+	result, err = interpreter.Interpret(ast.NewEqual(
+		ast.NewInteger(2),
+		ast.NewInteger(2),
 	))
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -208,9 +206,9 @@ func TestInterpreterEqual(t *testing.T) {
 		t.Errorf("result = %d; want 1", result)
 	}
 
-	result, err = interpreter.Interpret(_ast.Equal(
-		_ast.Integer(3),
-		_ast.Integer(2),
+	result, err = interpreter.Interpret(ast.NewEqual(
+		ast.NewInteger(3),
+		ast.NewInteger(2),
 	))
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -221,9 +219,9 @@ func TestInterpreterEqual(t *testing.T) {
 }
 
 func TestInterpreterNotEqual(t *testing.T) {
-	result, err := interpreter.Interpret(_ast.NotEqual(
-		_ast.Integer(1),
-		_ast.Integer(2),
+	result, err := interpreter.Interpret(ast.NewNotEqual(
+		ast.NewInteger(1),
+		ast.NewInteger(2),
 	))
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -232,9 +230,9 @@ func TestInterpreterNotEqual(t *testing.T) {
 		t.Errorf("result = %d; want 1", result)
 	}
 
-	result, err = interpreter.Interpret(_ast.NotEqual(
-		_ast.Integer(2),
-		_ast.Integer(2),
+	result, err = interpreter.Interpret(ast.NewNotEqual(
+		ast.NewInteger(2),
+		ast.NewInteger(2),
 	))
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -243,9 +241,9 @@ func TestInterpreterNotEqual(t *testing.T) {
 		t.Errorf("result = %d; want 0", result)
 	}
 
-	result, err = interpreter.Interpret(_ast.NotEqual(
-		_ast.Integer(3),
-		_ast.Integer(2),
+	result, err = interpreter.Interpret(ast.NewNotEqual(
+		ast.NewInteger(3),
+		ast.NewInteger(2),
 	))
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -256,9 +254,9 @@ func TestInterpreterNotEqual(t *testing.T) {
 }
 
 func TestInterpreterGreaterOrEqual(t *testing.T) {
-	result, err := interpreter.Interpret(_ast.GreaterOrEqual(
-		_ast.Integer(1),
-		_ast.Integer(2),
+	result, err := interpreter.Interpret(ast.NewGreaterOrEqual(
+		ast.NewInteger(1),
+		ast.NewInteger(2),
 	))
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -267,9 +265,9 @@ func TestInterpreterGreaterOrEqual(t *testing.T) {
 		t.Errorf("result = %d; want 0", result)
 	}
 
-	result, err = interpreter.Interpret(_ast.GreaterOrEqual(
-		_ast.Integer(2),
-		_ast.Integer(2),
+	result, err = interpreter.Interpret(ast.NewGreaterOrEqual(
+		ast.NewInteger(2),
+		ast.NewInteger(2),
 	))
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -278,9 +276,9 @@ func TestInterpreterGreaterOrEqual(t *testing.T) {
 		t.Errorf("result = %d; want 1", result)
 	}
 
-	result, err = interpreter.Interpret(_ast.GreaterOrEqual(
-		_ast.Integer(3),
-		_ast.Integer(2),
+	result, err = interpreter.Interpret(ast.NewGreaterOrEqual(
+		ast.NewInteger(3),
+		ast.NewInteger(2),
 	))
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -296,7 +294,7 @@ func TestInterpreterIdentifier(t *testing.T) {
 		funcEnv: map[string]ast.FunctionDefinition{},
 	}
 
-	exp := _ast.Identifier("key")
+	exp := ast.NewIdentifier("key")
 	result, err := interpreter.Interpret(exp)
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -307,7 +305,7 @@ func TestInterpreterIdentifier(t *testing.T) {
 }
 
 func TestInterpretAssignment(t *testing.T) {
-	exp := _ast.Assignment("key", _ast.Integer(1))
+	exp := ast.NewAssignment("key", ast.NewInteger(1))
 	result, err := interpreter.Interpret(exp)
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -323,10 +321,10 @@ func TestInterpretAssignment(t *testing.T) {
 }
 
 func TestInterpreterIf(t *testing.T) {
-	exp := _ast.If(
-		_ast.Equal(_ast.Integer(1), _ast.Integer(1)), // true
-		_ast.Block([]ast.Expression{_ast.Integer(2)}),
-		_ast.Block([]ast.Expression{_ast.Integer(3)}),
+	exp := ast.NewIf(
+		ast.NewEqual(ast.NewInteger(1), ast.NewInteger(1)), // true
+		ast.NewBlock([]ast.Expression{ast.NewInteger(2)}),
+		ast.NewBlock([]ast.Expression{ast.NewInteger(3)}),
 	)
 	result, err := interpreter.Interpret(exp)
 	if err != nil {
@@ -336,7 +334,7 @@ func TestInterpreterIf(t *testing.T) {
 		t.Errorf("result = %d; want 2", result)
 	}
 
-	exp.Condition = _ast.NotEqual(_ast.Integer(1), _ast.Integer(1)) //false
+	exp.Condition = ast.NewNotEqual(ast.NewInteger(1), ast.NewInteger(1)) //false
 	result, err = interpreter.Interpret(exp)
 	if err != nil {
 		t.Errorf("failed to Interpret: %v", err)
@@ -362,19 +360,19 @@ func TestInterpreterWhile(t *testing.T) {
 		funcEnv: map[string]ast.FunctionDefinition{},
 	}
 
-	identifier := _ast.Identifier("condition")
+	identifier := ast.NewIdentifier("condition")
 
 	/*
 		while condition != 0 {
 			condition = condition - 1
 		}
 	*/
-	exp := _ast.While(
+	exp := ast.NewWhile(
 		identifier,
-		_ast.Block([]ast.Expression{
-			_ast.Assignment(
+		ast.NewBlock([]ast.Expression{
+			ast.NewAssignment(
 				"condition",
-				_ast.Subtract(identifier, _ast.Integer(1)),
+				ast.NewSubtract(identifier, ast.NewInteger(1)),
 			),
 		}),
 	)
@@ -393,18 +391,18 @@ func TestInterpreterWhile(t *testing.T) {
 }
 
 func TestInterpreterBlock(t *testing.T) {
-	identifier := _ast.Identifier("a")
+	identifier := ast.NewIdentifier("a")
 
 	/*
 		a = 0
 		a = a + 10
 		a * 2
 	*/
-	exp := _ast.Block(
+	exp := ast.NewBlock(
 		[]ast.Expression{
-			_ast.Assignment("a", _ast.Integer(0)),
-			_ast.Assignment("a", _ast.Add(identifier, _ast.Integer(10))),
-			_ast.Multiply(identifier, _ast.Integer(2)),
+			ast.NewAssignment("a", ast.NewInteger(0)),
+			ast.NewAssignment("a", ast.NewAdd(identifier, ast.NewInteger(10))),
+			ast.NewMultiply(identifier, ast.NewInteger(2)),
 		},
 	)
 
@@ -422,7 +420,7 @@ func TestInterpreterBlock(t *testing.T) {
 }
 
 func TestInterpreterPrintln(t *testing.T) {
-	result, err := interpreter.Interpret(_ast.Println(_ast.Integer(2)))
+	result, err := interpreter.Interpret(ast.NewPrintln(ast.NewInteger(2)))
 	if err != nil {
 		t.Errorf("failed to Interpret Println: %v", err)
 	}
@@ -432,7 +430,7 @@ func TestInterpreterPrintln(t *testing.T) {
 }
 
 func TestInterpreterDefineAndCallFunction(t *testing.T) {
-	n := _ast.Identifier("n")
+	n := ast.NewIdentifier("n")
 	topLevels := []ast.TopLevel{
 		/*
 			define main() {
@@ -440,10 +438,10 @@ func TestInterpreterDefineAndCallFunction(t *testing.T) {
 				fact(5);
 			}
 		*/
-		_ast.DefineFunction("main", nil, _ast.Block(
+		ast.NewFuncDef("main", nil, ast.NewBlock(
 			[]ast.Expression{
-				_ast.Assignment("n", _ast.Integer(0)), // This will be overwritten by argument in fact().
-				_ast.Call("fact", []ast.Expression{_ast.Integer(5)}),
+				ast.NewAssignment("n", ast.NewInteger(0)), // This will be overwritten by argument in fact().
+				ast.NewFuncCall("fact", []ast.Expression{ast.NewInteger(5)}),
 			},
 		)),
 		/*
@@ -455,20 +453,20 @@ func TestInterpreterDefineAndCallFunction(t *testing.T) {
 				}
 			}
 		*/
-		_ast.DefineFunction("fact", []string{"n"}, _ast.Block([]ast.Expression{
-			_ast.If(
-				_ast.LessThan(n, _ast.Integer(2)),
-				_ast.Block([]ast.Expression{_ast.Integer(1)}),
-				_ast.Block([]ast.Expression{
-					_ast.Multiply(n, _ast.Call("fact", []ast.Expression{
-						_ast.Subtract(n, _ast.Integer(1)),
+		ast.NewFuncDef("fact", []string{"n"}, ast.NewBlock([]ast.Expression{
+			ast.NewIf(
+				ast.NewLessThan(n, ast.NewInteger(2)),
+				ast.NewBlock([]ast.Expression{ast.NewInteger(1)}),
+				ast.NewBlock([]ast.Expression{
+					ast.NewMultiply(n, ast.NewFuncCall("fact", []ast.Expression{
+						ast.NewSubtract(n, ast.NewInteger(1)),
 					})),
 				}),
 			),
 		})),
 	}
 
-	result, err := interpreter.CallMain(_ast.Program(topLevels))
+	result, err := interpreter.CallMain(ast.NewProgram(topLevels))
 	if err != nil {
 		t.Errorf("failed to CallMain: %v", err)
 	}
@@ -488,15 +486,15 @@ func TestInterpreterGlobalVarDef(t *testing.T) {
 				n + m
 			}
 		*/
-		_ast.GlobalAssignment("n", _ast.Integer(1)),
-		_ast.GlobalAssignment("m", _ast.Integer(3)), // This will be overwritten in main().
-		_ast.DefineFunction("main", nil, _ast.Block([]ast.Expression{
-			_ast.Assignment("m", _ast.Integer(2)),
-			_ast.Add(_ast.Identifier("n"), _ast.Identifier("m")),
+		ast.NewGlobalVarDef("n", ast.NewInteger(1)),
+		ast.NewGlobalVarDef("m", ast.NewInteger(3)), // This will be overwritten in main().
+		ast.NewFuncDef("main", nil, ast.NewBlock([]ast.Expression{
+			ast.NewAssignment("m", ast.NewInteger(2)),
+			ast.NewAdd(ast.NewIdentifier("n"), ast.NewIdentifier("m")),
 		})),
 	}
 
-	result, err := interpreter.CallMain(_ast.Program(topLevels))
+	result, err := interpreter.CallMain(ast.NewProgram(topLevels))
 	if err != nil {
 		t.Errorf("failed to CallMain: %v", err)
 	}
