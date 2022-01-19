@@ -226,6 +226,7 @@ func (i *Interpreter) CallMain(program ast.Program) (int, error) {
 		funcDef, ok := topLevel.(ast.FunctionDefinition)
 		if ok {
 			i.funcEnv[funcDef.Name] = funcDef
+			continue
 		}
 
 		globalVarDef, ok := topLevel.(ast.GlobalVariableDefinition)
