@@ -1,6 +1,9 @@
 package parser
 
+import "github.com/TOMOFUMI-KONDO/toy/ast"
+
 type Toy Peg {
+    ast.Program
 }
 
 program <- topLevel* !.
@@ -15,17 +18,20 @@ expression <-  ifExpression / whileExpression / blockExpression / assignment / c
 ifExpression <- 'if' space comparative space blockExpression ( 'else' space blockExpression )?
 whileExpression <- 'while' space comparative space blockExpression
 blockExpression <- '{' space? expression* space? '}' space?
-
 assignment <- identifier '=' expression space
-
-comparative <- additive ( ( '<' / '>' / '<=' / '>=' / '==' / '!=' ) additive )*
-additive <- multitive ( ( '+' / '-' ) multitive )*
-multitive <- primary ( ('*' / '/') primary )*
-
-primary <- ( '(' comparative ')' ) / println / functionCall / identifier / integer
 
 println <- 'println' '(' expression ')'
 functionCall <- identifier '(' ( expression ( ',' expression )* )? ')'
+
+comparative <- additive ( comparativeOperator additive )*
+additive <- multitive ( additiveOperator multitive )*
+multitive <- primary ( multitiveOperator primary )*
+
+primary <- ( '(' comparative ')' ) / println / functionCall / identifier / integer
+
+comparativeOperator <- '<' / '>' / '<=' / '>=' / '==' / '!='
+additiveOperator <- '+' / '-'
+multitiveOperator <- '*' / '/'
 
 identifier <- [a-zA-Z]+
 integer <- [1-9] [0-9]*

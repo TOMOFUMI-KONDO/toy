@@ -4,6 +4,14 @@ func NewInteger(value int) IntegerLiteral {
 	return IntegerLiteral{Value: value}
 }
 
+func NewBinary(op Operator, lhs, rhs Expression) BinaryExpression {
+	return BinaryExpression{
+		Operator: op,
+		Lhs:      lhs,
+		Rhs:      rhs,
+	}
+}
+
 func NewAdd(lhs, rhs Expression) BinaryExpression {
 	return BinaryExpression{
 		Operator: ADD,

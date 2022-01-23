@@ -22,3 +22,7 @@ func (GlobalVariableDefinition) topLevel() {}
 type Program struct {
 	Definitions []TopLevel
 }
+
+func (p *Program) PushTopLevel(tp TopLevel) {
+	p.Definitions = append(p.Definitions, tp)
+}
