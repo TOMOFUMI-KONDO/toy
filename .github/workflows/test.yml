@@ -17,6 +17,9 @@ jobs:
       with:
         go-version: 1.17
 
+    - name: set up peg
+      run: go get -u github.com/pointlander/peg
+
     - name: build
       run: make -C ./parser build
 
