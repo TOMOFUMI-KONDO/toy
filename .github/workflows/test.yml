@@ -17,5 +17,8 @@ jobs:
       with:
         go-version: 1.17
 
+    - name: build
+      run: make -C ./parser build
+
     - name: test
       run: go test -v ./...
