@@ -236,6 +236,7 @@ func (i *Interpreter) CallMain(program ast.Program) (int, error) {
 				return 0, fmt.Errorf("failed to Interpret Expression of GlobalVariable Definition: %v", err)
 			}
 			i.varEnv.Bindings[globalVarDef.Name] = result
+			continue
 		}
 	}
 
