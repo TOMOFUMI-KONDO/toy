@@ -24,13 +24,12 @@ define main() {
 	if err := toy.Parse(); err != nil {
 		t.Fatal(err)
 	}
-
 	if err := toy.ConvertAst(); err != nil {
 		t.Fatal(err)
 	}
 
-	_interpreter := interpreter.NewInterpreter()
-	result, err := _interpreter.CallMain(toy.Program)
+	i := interpreter.NewInterpreter()
+	result, err := i.CallMain(toy.Program)
 	if err != nil {
 		t.Fatal(err)
 	}
