@@ -18,13 +18,7 @@ define main() {
 	factorial(5)
 }`
 	toy := &Toy{Buffer: exp}
-	if err := toy.Init(); err != nil {
-		t.Fatal(err)
-	}
-	if err := toy.Parse(); err != nil {
-		t.Fatal(err)
-	}
-	if err := toy.ConvertAst(); err != nil {
+	if err := setUp(toy); err != nil {
 		t.Fatal(err)
 	}
 
@@ -34,8 +28,21 @@ define main() {
 		t.Fatal(err)
 	}
 
-	expected := 120
-	if result != expected {
-		t.Errorf("result = %d; want %d", result, expected)
+	if result != 120 {
+		t.Errorf("result = %d; want %d", result, 120)
 	}
+}
+
+func setUp(t *Toy) error {
+	if err := t.Init(); err != nil {
+		return err
+	}
+	if err := t.Parse(); err != nil {
+		return err
+	}
+	if err := t.ConvertAst(); err != nil {
+		return err
+	}
+
+	return nil
 }
