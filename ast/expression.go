@@ -174,6 +174,13 @@ func NewIf(cond Expression, thenClause BlockExpression, elseClause BlockExpressi
 	}
 }
 
+func NewIfWithoutElse(cond Expression, thenClause BlockExpression) IfExpression {
+	return IfExpression{
+		Condition:  cond,
+		ThenClause: thenClause,
+	}
+}
+
 type Println struct {
 	Arg Expression
 }
