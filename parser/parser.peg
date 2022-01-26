@@ -29,7 +29,7 @@ multitive <- primary ( multitiveOperator primary )*
 
 primary <- ( '(' comparative ')' ) / println / functionCall / identifier / integer
 
-comparativeOperator <- '<' / '>' / '<=' / '>=' / '==' / '!='
+comparativeOperator <- '<=' / '>=' / '<' / '>' / '==' / '!='
 additiveOperator <- '+' / '-'
 multitiveOperator <- '*' / '/'
 
