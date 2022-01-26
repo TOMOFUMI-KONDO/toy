@@ -188,6 +188,27 @@ func (p *Toy) ifExp(node *node32) (*ast.IfExpression, error) {
 	return &ifExp, nil
 }
 
+func (p *Toy) println(node *node32) (*ast.Println, error) {
+	infoLog.info("println\n%s\n", p.tokenStr(node))
+
+	node = node.up
+	for node != nil {
+		switch node.pegRule {
+		case ruleexpression:
+			exp, err := p.expression(node)
+			if err != nil {
+				return nil, err
+			}
+			printlnExp := ast.NewPrintln(exp)
+			return &printlnExp, nil
+		}
+
+		node = node.next
+	}
+
+	return nil, fmt.Errorf("not reach here")
+}
+
 func (p *Toy) funcCall(node *node32) (*ast.FunctionCall, error) {
 	infoLog.info("funcCall\n%s\n", p.tokenStr(node))
 
@@ -341,7 +362,8 @@ func (p *Toy) primary(node *node32) (ast.Expression, error) {
 		case rulecomparative:
 			return p.comparative(node)
 		case ruleprintln:
-			// TODO
+			exp, err := p.println(node)
+			return *exp, err
 		case rulefunctionCall:
 			exp, err := p.funcCall(node)
 			return *exp, err
