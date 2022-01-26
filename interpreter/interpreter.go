@@ -2,6 +2,8 @@ package interpreter
 
 import (
 	"fmt"
+	"io"
+	"os"
 
 	"github.com/TOMOFUMI-KONDO/toy/ast"
 )
@@ -11,13 +13,21 @@ const mainFuncName = "main"
 type Interpreter struct {
 	varEnv  *ast.Environment
 	funcEnv map[string]ast.FunctionDefinition
+	writer  io.Writer
 }
 
 func NewInterpreter() Interpreter {
 	return Interpreter{
 		varEnv:  nil,
 		funcEnv: map[string]ast.FunctionDefinition{},
+		writer:  os.Stdout,
 	}
+}
+
+func NewInterpreterWithWriter(w io.Writer) Interpreter {
+	i := NewInterpreter()
+	i.writer = w
+	return i
 }
 
 func (i *Interpreter) Interpret(e ast.Expression) (int, error) {
@@ -178,7 +188,11 @@ func (i *Interpreter) Interpret(e ast.Expression) (int, error) {
 		if err != nil {
 			return 0, fmt.Errorf("failed to Interpret Println: %v", err)
 		}
-		fmt.Println(result)
+
+		if _, err := fmt.Fprint(i.writer, result); err != nil {
+			return 0, err
+		}
+
 		return result, nil
 	}
 
