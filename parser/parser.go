@@ -339,7 +339,7 @@ func (p *Toy) primary(node *node32) (ast.Expression, error) {
 	for node != nil {
 		switch node.pegRule {
 		case rulecomparative:
-			// TODO
+			return p.comparative(node)
 		case ruleprintln:
 			// TODO
 		case rulefunctionCall:
