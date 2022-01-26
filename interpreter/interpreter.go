@@ -18,7 +18,7 @@ type Interpreter struct {
 
 func NewInterpreter() Interpreter {
 	return Interpreter{
-		varEnv:  nil,
+		varEnv:  ast.NewEnvironment(nil),
 		funcEnv: map[string]ast.FunctionDefinition{},
 		writer:  os.Stdout,
 	}
