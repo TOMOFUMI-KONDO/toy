@@ -17,7 +17,7 @@ expression <-  ifExpression / whileExpression / blockExpression / assignment / c
 
 ifExpression <- 'if' space comparative space blockExpression ( 'else' space blockExpression )?
 whileExpression <- 'while' space comparative space blockExpression
-blockExpression <- '{' space? expression* space? '}' space?
+blockExpression <- '{' space? expression? ( space? expression )* space? '}' space?
 assignment <- identifier '=' expression space
 
 println <- 'println' '(' expression ')'
