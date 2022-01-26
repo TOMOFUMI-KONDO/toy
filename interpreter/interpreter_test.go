@@ -289,10 +289,7 @@ func TestInterpreterGreaterOrEqual(t *testing.T) {
 }
 
 func TestInterpreterIdentifier(t *testing.T) {
-	interpreter = Interpreter{
-		varEnv:  &ast.Environment{Bindings: map[string]int{"key": 1}},
-		funcEnv: map[string]ast.FunctionDefinition{},
-	}
+	interpreter.varEnv = &ast.Environment{Bindings: map[string]int{"key": 1}}
 
 	exp := ast.NewIdentifier("key")
 	result, err := interpreter.Interpret(exp)
@@ -355,10 +352,7 @@ func TestInterpreterIf(t *testing.T) {
 }
 
 func TestInterpreterWhile(t *testing.T) {
-	interpreter = Interpreter{
-		varEnv:  &ast.Environment{Bindings: map[string]int{"condition": 10}},
-		funcEnv: map[string]ast.FunctionDefinition{},
-	}
+	interpreter.varEnv = &ast.Environment{Bindings: map[string]int{"condition": 10}}
 
 	identifier := ast.NewIdentifier("condition")
 
