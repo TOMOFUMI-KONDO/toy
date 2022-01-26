@@ -69,8 +69,14 @@ func (p *Toy) topLevel(node *node32) (ast.TopLevel, error) {
 			return *funcDef, nil
 
 		case ruleglobalVariableDefinition:
-			// TODO
+			globalVarDef, err := p.globalVariableDefinition(node)
+			if err != nil {
+				return nil, err
+			}
+			return *globalVarDef, nil
 		}
+
+		node = node.next
 	}
 
 	return nil, fmt.Errorf("not reach here")
@@ -109,6 +115,33 @@ func (p *Toy) functionDefinition(node *node32) (*ast.FunctionDefinition, error) 
 	return &funcDef, nil
 }
 
+func (p *Toy) globalVariableDefinition(node *node32) (*ast.GlobalVariableDefinition, error) {
+	infoLog.info("topLevel\n%s\n", p.tokenStr(node))
+
+	var name string
+	var exp ast.Expression
+
+	node = node.up
+	for node != nil {
+		switch node.pegRule {
+		case ruleidentifier:
+			name = p.tokenStr(node)
+
+		case ruleexpression:
+			var err error
+			exp, err = p.expression(node)
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		node = node.next
+	}
+
+	globalVarDef := ast.NewGlobalVarDef(name, exp)
+	return &globalVarDef, nil
+}
+
 func (p *Toy) expression(node *node32) (ast.Expression, error) {
 	infoLog.info("expression\n%s\n", p.tokenStr(node))
 
@@ -119,6 +152,18 @@ func (p *Toy) expression(node *node32) (ast.Expression, error) {
 			exp, err := p.ifExp(node)
 			return *exp, err
 
+		case rulewhileExpression:
+			exp, err := p.while(node)
+			return *exp, err
+
+		case ruleblockExpression:
+			exp, err := p.block(node)
+			return *exp, err
+
+		case ruleassignment:
+			exp, err := p.assignment(node)
+			return *exp, err
+
 		case rulecomparative:
 			return p.comparative(node)
 		}
@@ -127,29 +172,6 @@ func (p *Toy) expression(node *node32) (ast.Expression, error) {
 	}
 
 	return nil, fmt.Errorf("not reach here")
-}
-
-func (p *Toy) block(node *node32) (*ast.BlockExpression, error) {
-	infoLog.info("block\n%s\n", p.tokenStr(node))
-
-	var expressions []ast.Expression
-
-	node = node.up
-	for node != nil {
-		switch node.pegRule {
-		case ruleexpression:
-			exp, err := p.expression(node)
-			if err != nil {
-				return nil, err
-			}
-			expressions = append(expressions, exp)
-		}
-
-		node = node.next
-	}
-
-	block := ast.NewBlock(expressions)
-	return &block, nil
 }
 
 func (p *Toy) ifExp(node *node32) (*ast.IfExpression, error) {
@@ -184,8 +206,91 @@ func (p *Toy) ifExp(node *node32) (*ast.IfExpression, error) {
 		node = node.next
 	}
 
-	ifExp := ast.NewIf(cond, *thenClause, *elseClause)
+	var ifExp ast.IfExpression
+	if elseClause == nil {
+		ifExp = ast.NewIfWithoutElse(cond, *thenClause)
+	} else {
+		ifExp = ast.NewIf(cond, *thenClause, *elseClause)
+	}
 	return &ifExp, nil
+}
+
+func (p *Toy) while(node *node32) (*ast.WhileExpression, error) {
+	infoLog.info("assignment\n%s\n", p.tokenStr(node))
+
+	var cond ast.Expression
+	var body *ast.BlockExpression
+
+	node = node.up
+	for node != nil {
+		var err error
+
+		switch node.pegRule {
+		case rulecomparative:
+			cond, err = p.comparative(node)
+			if err != nil {
+				return nil, err
+			}
+
+		case ruleblockExpression:
+			body, err = p.block(node)
+		}
+
+		node = node.next
+	}
+
+	while := ast.NewWhile(cond, *body)
+	return &while, nil
+}
+
+func (p *Toy) block(node *node32) (*ast.BlockExpression, error) {
+	infoLog.info("block\n%s\n", p.tokenStr(node))
+
+	var expressions []ast.Expression
+
+	node = node.up
+	for node != nil {
+		switch node.pegRule {
+		case ruleexpression:
+			exp, err := p.expression(node)
+			if err != nil {
+				return nil, err
+			}
+			expressions = append(expressions, exp)
+		}
+
+		node = node.next
+	}
+
+	block := ast.NewBlock(expressions)
+	return &block, nil
+}
+
+func (p *Toy) assignment(node *node32) (*ast.Assignment, error) {
+	infoLog.info("assignment\n%s\n", p.tokenStr(node))
+
+	var name string
+	var exp ast.Expression
+
+	node = node.up
+	for node != nil {
+		switch node.pegRule {
+		case ruleidentifier:
+			name = p.tokenStr(node)
+
+		case ruleexpression:
+			var err error
+			exp, err = p.expression(node)
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		node = node.next
+	}
+
+	assignment := ast.NewAssignment(name, exp)
+	return &assignment, nil
 }
 
 func (p *Toy) println(node *node32) (*ast.Println, error) {
