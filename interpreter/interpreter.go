@@ -30,19 +30,19 @@ func NewInterpreterWithWriter(w io.Writer) Interpreter {
 	return i
 }
 
-func (i *Interpreter) Interpret(e ast.Expression) (int, error) {
-	binaryExp, ok := e.(ast.BinaryExpression)
-	if ok {
-		lhs, err := i.Interpret(binaryExp.Lhs)
+func (i *Interpreter) Interpret(intf ast.Expression) (int, error) {
+	switch exp := intf.(type) {
+	case ast.BinaryExpression:
+		lhs, err := i.Interpret(exp.Lhs)
 		if err != nil {
 			return 0, err
 		}
-		rhs, err := i.Interpret(binaryExp.Rhs)
+		rhs, err := i.Interpret(exp.Rhs)
 		if err != nil {
 			return 0, err
 		}
 
-		switch binaryExp.Operator {
+		switch exp.Operator {
 		case ast.Add:
 			return lhs + rhs, nil
 		case ast.Subtract:
@@ -88,52 +88,44 @@ func (i *Interpreter) Interpret(e ast.Expression) (int, error) {
 				return 0, nil
 			}
 		default:
-			return 0, fmt.Errorf("invalid operator: %v", binaryExp.Operator)
+			return 0, fmt.Errorf("invalid operator: %v", exp.Operator)
 		}
-	}
 
-	intLiteralExp, ok := e.(ast.IntegerLiteral)
-	if ok {
-		return intLiteralExp.Value, nil
-	}
+	case ast.IntegerLiteral:
+		return exp.Value, nil
 
-	identifier, ok := e.(ast.Identifier)
-	if ok {
-		b := i.varEnv.FindBinding(identifier.Name)
-		return b[identifier.Name], nil
-	}
+	case ast.Identifier:
+		b := i.varEnv.FindBinding(exp.Name)
+		return b[exp.Name], nil
 
-	assignment, ok := e.(ast.Assignment)
-	if ok {
-		v, err := i.Interpret(assignment.Expression)
+	case ast.Assignment:
+		v, err := i.Interpret(exp.Expression)
 		if err != nil {
 			return 0, fmt.Errorf("failed to Interpert expression of assignment: %w", err)
 		}
 
-		b := i.varEnv.FindBinding(assignment.Name)
+		b := i.varEnv.FindBinding(exp.Name)
 		if b == nil {
 			// assign new environment
-			i.varEnv.Bindings[assignment.Name] = v
+			i.varEnv.Bindings[exp.Name] = v
 		} else {
 			// reassignment
-			b[assignment.Name] = v
+			b[exp.Name] = v
 		}
 
 		return v, nil
-	}
 
-	ifExp, ok := e.(ast.IfExpression)
-	if ok {
-		cond, err := i.evalCondition(ifExp.Condition)
+	case ast.IfExpression:
+		cond, err := i.evalCondition(exp.Condition)
 		if err != nil {
 			return 0, fmt.Errorf("failed to eval condition of IfExpression")
 		}
 
 		var result int
 		if cond /* NOTE: evaluate true if cond is not 0 */ {
-			result, err = i.Interpret(ifExp.ThenClause)
-		} else if ifExp.ElseClause.Expressions != nil {
-			result, err = i.Interpret(ifExp.ElseClause)
+			result, err = i.Interpret(exp.ThenClause)
+		} else if exp.ElseClause.Expressions != nil {
+			result, err = i.Interpret(exp.ElseClause)
 		} else {
 			// NOTE: evaluate 1 if cond is false and elseClause is nil
 			return 1, nil
@@ -143,19 +135,17 @@ func (i *Interpreter) Interpret(e ast.Expression) (int, error) {
 			return 0, fmt.Errorf("failed to Interptret ThenClause of IfExpression: %w", err)
 		}
 		return result, nil
-	}
 
-	whileExp, ok := e.(ast.WhileExpression)
-	if ok {
+	case ast.WhileExpression:
 		// loop body while cond is true, then return 1
 		for {
-			cond, err := i.evalCondition(whileExp.Condition)
+			cond, err := i.evalCondition(exp.Condition)
 			if err != nil {
 				return 0, fmt.Errorf("failed to eval condition of WhileExpression: %w", err)
 			}
 
 			if cond {
-				if _, err := i.Interpret(whileExp.Body); err != nil {
+				if _, err := i.Interpret(exp.Body); err != nil {
 					return 0, fmt.Errorf("failed to Interpret body of WhileExp: %w", err)
 				}
 			} else {
@@ -164,15 +154,13 @@ func (i *Interpreter) Interpret(e ast.Expression) (int, error) {
 		}
 
 		return 1, nil
-	}
 
-	blockExp, ok := e.(ast.BlockExpression)
-	if ok {
+	case ast.BlockExpression:
 		var err error
 		result := 0
 
 		// evaluate all expressions, then return last expression.
-		for _, exp := range blockExp.Expressions {
+		for _, exp := range exp.Expressions {
 			result, err = i.Interpret(exp)
 			if err != nil {
 				return 0, fmt.Errorf("failed to Interpret one of Expressions of BlockExpression: %v", err)
@@ -180,11 +168,9 @@ func (i *Interpreter) Interpret(e ast.Expression) (int, error) {
 		}
 
 		return result, nil
-	}
 
-	printlnExp, ok := e.(ast.Println)
-	if ok {
-		result, err := i.Interpret(printlnExp.Arg)
+	case ast.Println:
+		result, err := i.Interpret(exp.Arg)
 		if err != nil {
 			return 0, fmt.Errorf("failed to Interpret Println: %v", err)
 		}
@@ -194,17 +180,15 @@ func (i *Interpreter) Interpret(e ast.Expression) (int, error) {
 		}
 
 		return result, nil
-	}
 
-	funcCall, ok := e.(ast.FunctionCall)
-	if ok {
-		funcDef, ok := i.funcEnv[funcCall.Name]
+	case ast.FunctionCall:
+		funcDef, ok := i.funcEnv[exp.Name]
 		if !ok {
-			return 0, fmt.Errorf("function %s is not found", funcCall.Name)
+			return 0, fmt.Errorf("function %s is not found", exp.Name)
 		}
 
 		var actualArgs []int
-		for _, param := range funcCall.Args {
+		for _, param := range exp.Args {
 			result, err := i.Interpret(param)
 			if err != nil {
 				return 0, fmt.Errorf("failed to Interpret one of FunctionCall Args: %v", err)
@@ -229,9 +213,10 @@ func (i *Interpreter) Interpret(e ast.Expression) (int, error) {
 		}
 
 		return result, nil
-	}
 
-	return 0, fmt.Errorf("unexpected expression: %v", e)
+	default:
+		return 0, fmt.Errorf("unexpected expression: %v", exp)
+	}
 }
 
 func (i *Interpreter) CallMain(program ast.Program) (int, error) {
