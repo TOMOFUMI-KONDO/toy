@@ -32,7 +32,7 @@ func NewBinary(op Operator, lhs, rhs Expression) BinaryExpression {
 
 func NewAdd(lhs, rhs Expression) BinaryExpression {
 	return BinaryExpression{
-		Operator: ADD,
+		Operator: Add,
 		Lhs:      lhs,
 		Rhs:      rhs,
 	}
@@ -40,7 +40,7 @@ func NewAdd(lhs, rhs Expression) BinaryExpression {
 
 func NewSubtract(lhs, rhs Expression) BinaryExpression {
 	return BinaryExpression{
-		Operator: SUBTRACT,
+		Operator: Subtract,
 		Lhs:      lhs,
 		Rhs:      rhs,
 	}
@@ -48,7 +48,7 @@ func NewSubtract(lhs, rhs Expression) BinaryExpression {
 
 func NewMultiply(lhs, rhs Expression) BinaryExpression {
 	return BinaryExpression{
-		Operator: MULTIPLY,
+		Operator: Multiply,
 		Lhs:      lhs,
 		Rhs:      rhs,
 	}
@@ -56,7 +56,7 @@ func NewMultiply(lhs, rhs Expression) BinaryExpression {
 
 func NewDivide(lhs, rhs Expression) BinaryExpression {
 	return BinaryExpression{
-		Operator: DIVIDE,
+		Operator: Divide,
 		Lhs:      lhs,
 		Rhs:      rhs,
 	}
@@ -64,7 +64,7 @@ func NewDivide(lhs, rhs Expression) BinaryExpression {
 
 func NewLessThan(lhs, rhs Expression) BinaryExpression {
 	return BinaryExpression{
-		Operator: LESS_THAN,
+		Operator: LessThan,
 		Lhs:      lhs,
 		Rhs:      rhs,
 	}
@@ -72,7 +72,7 @@ func NewLessThan(lhs, rhs Expression) BinaryExpression {
 
 func NewLessOrEqual(lhs, rhs Expression) BinaryExpression {
 	return BinaryExpression{
-		Operator: LESS_OR_EQUAL,
+		Operator: LessOrEqual,
 		Lhs:      lhs,
 		Rhs:      rhs,
 	}
@@ -80,7 +80,7 @@ func NewLessOrEqual(lhs, rhs Expression) BinaryExpression {
 
 func NewGreaterThan(lhs, rhs Expression) BinaryExpression {
 	return BinaryExpression{
-		Operator: GREATER_THAN,
+		Operator: GreaterThan,
 		Lhs:      lhs,
 		Rhs:      rhs,
 	}
@@ -88,7 +88,7 @@ func NewGreaterThan(lhs, rhs Expression) BinaryExpression {
 
 func NewGreaterOrEqual(lhs, rhs Expression) BinaryExpression {
 	return BinaryExpression{
-		Operator: GREATER_OR_EQUAL,
+		Operator: GreaterOrEqual,
 		Lhs:      lhs,
 		Rhs:      rhs,
 	}
@@ -96,7 +96,7 @@ func NewGreaterOrEqual(lhs, rhs Expression) BinaryExpression {
 
 func NewEqual(lhs, rhs Expression) BinaryExpression {
 	return BinaryExpression{
-		Operator: EQUAL,
+		Operator: Equal,
 		Lhs:      lhs,
 		Rhs:      rhs,
 	}
@@ -104,7 +104,7 @@ func NewEqual(lhs, rhs Expression) BinaryExpression {
 
 func NewNotEqual(lhs, rhs Expression) BinaryExpression {
 	return BinaryExpression{
-		Operator: NOT_EQUAL,
+		Operator: NotEqual,
 		Lhs:      lhs,
 		Rhs:      rhs,
 	}

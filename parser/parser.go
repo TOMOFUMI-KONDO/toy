@@ -493,17 +493,17 @@ func (p *Toy) comparativeOperator(node *node32) (ast.Operator, error) {
 
 	switch p.tokenStr(node) {
 	case "<":
-		return ast.LESS_THAN, nil
+		return ast.LessThan, nil
 	case ">":
-		return ast.GREATER_THAN, nil
+		return ast.GreaterThan, nil
 	case "<=":
-		return ast.LESS_OR_EQUAL, nil
+		return ast.LessOrEqual, nil
 	case ">=":
-		return ast.GREATER_OR_EQUAL, nil
+		return ast.GreaterOrEqual, nil
 	case "==":
-		return ast.EQUAL, nil
+		return ast.Equal, nil
 	case "!=":
-		return ast.NOT_EQUAL, nil
+		return ast.NotEqual, nil
 	}
 
 	return -1, fmt.Errorf("not reach here")
@@ -514,9 +514,9 @@ func (p *Toy) additiveOperator(node *node32) (ast.Operator, error) {
 
 	switch p.tokenStr(node) {
 	case "+":
-		return ast.ADD, nil
+		return ast.Add, nil
 	case "-":
-		return ast.SUBTRACT, nil
+		return ast.Subtract, nil
 	}
 
 	return -1, fmt.Errorf("not reach here")
@@ -527,9 +527,9 @@ func (p *Toy) multitiveOperator(node *node32) (ast.Operator, error) {
 
 	switch p.tokenStr(node) {
 	case "*":
-		return ast.MULTIPLY, nil
+		return ast.Multiply, nil
 	case "/":
-		return ast.DIVIDE, nil
+		return ast.Divide, nil
 	}
 
 	return -1, fmt.Errorf("not reach here")

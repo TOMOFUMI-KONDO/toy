@@ -43,45 +43,45 @@ func (i *Interpreter) Interpret(e ast.Expression) (int, error) {
 		}
 
 		switch binaryExp.Operator {
-		case ast.ADD:
+		case ast.Add:
 			return lhs + rhs, nil
-		case ast.SUBTRACT:
+		case ast.Subtract:
 			return lhs - rhs, nil
-		case ast.MULTIPLY:
+		case ast.Multiply:
 			return lhs * rhs, nil
-		case ast.DIVIDE:
+		case ast.Divide:
 			return lhs / rhs, nil
-		case ast.LESS_THAN:
+		case ast.LessThan:
 			if lhs < rhs {
 				return 1, nil
 			} else {
 				return 0, nil
 			}
-		case ast.LESS_OR_EQUAL:
+		case ast.LessOrEqual:
 			if lhs <= rhs {
 				return 1, nil
 			} else {
 				return 0, nil
 			}
-		case ast.GREATER_THAN:
+		case ast.GreaterThan:
 			if lhs > rhs {
 				return 1, nil
 			} else {
 				return 0, nil
 			}
-		case ast.GREATER_OR_EQUAL:
+		case ast.GreaterOrEqual:
 			if lhs >= rhs {
 				return 1, nil
 			} else {
 				return 0, nil
 			}
-		case ast.EQUAL:
+		case ast.Equal:
 			if lhs == rhs {
 				return 1, nil
 			} else {
 				return 0, nil
 			}
-		case ast.NOT_EQUAL:
+		case ast.NotEqual:
 			if lhs != rhs {
 				return 1, nil
 			} else {
