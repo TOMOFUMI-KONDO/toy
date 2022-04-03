@@ -8,7 +8,7 @@ import (
 	"github.com/TOMOFUMI-KONDO/toy/ast"
 )
 
-const mainFuncName = "main"
+const MainFuncName = "main"
 
 type Interpreter struct {
 	varEnv  *ast.Environment
@@ -254,14 +254,14 @@ func (i *Interpreter) CallMain(program ast.Program) (int, error) {
 		}
 	}
 
-	if mainFunc, ok := i.funcEnv[mainFuncName]; ok {
+	if mainFunc, ok := i.funcEnv[MainFuncName]; ok {
 		result, err := i.Interpret(mainFunc.Body)
 		if err != nil {
 			return 0, fmt.Errorf("failed to Interpret body of mainFunction: %v", err)
 		}
 		return result, nil
 	} else {
-		return 0, fmt.Errorf("this program doesn't have %s() function", mainFuncName)
+		return 0, fmt.Errorf("this program doesn't have %s() function", MainFuncName)
 	}
 }
 
